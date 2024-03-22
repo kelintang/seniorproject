@@ -1,0 +1,65 @@
+---
+title: "Got to Know the Survey"
+output: 
+  html_document: 
+    theme: cerulean
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(pander)
+library(readxl)
+library(ggplot2movies)
+library(ggplot2)
+library(ggridges)
+library(tidyr)
+library(naniar) #replace to na
+library(DT)
+
+self <-  read_excel("../Datasets for Ben/Employer Completer Survey/self_Evaluation.xlsx")
+employer <- read_excel("../Datasets for Ben/Employer Completer Survey/Employer_Evaluation.xlsx")
+```
+
+
+```{r, echo = TRUE}
+self <- self %>% 
+  replace_with_na_all(condition = ~.x == 5)
+
+employer <- employer %>%
+  replace_with_na_all(condition = ~.x == 5)
+  
+self <- self %>%
+  mutate(who = "Individual") %>%
+  mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Maintain Accurate Records`), na.rm = TRUE), 2))
+
+   
+employer <- employer %>% 
+  filter(`Enable Student to Learn` < 5) %>% 
+  mutate(who="Principal") %>% 
+  mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Maintain Accurate Records`), na.rm = TRUE), 2)) 
+
+
+```
+
+## Dataset {.tabset}
+
+### Self Data  
+
+```{r}
+
+datatable(self, options=list(lengthMenu = c(5,10,30)), extensions="Responsive")
+```
+
+### Employer Data 
+
+```{r}
+datatable(employer, options=list(lengthMenu = c(5,10,30)), extensions="Responsive")
+```
+
+## Data 
+
+v

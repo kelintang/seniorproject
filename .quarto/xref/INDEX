@@ -1,0 +1,14 @@
+{
+  "index.qmd": {
+    "index.html": "6be05c8e"
+  },
+  "about.qmd": {
+    "about.html": "3d65b20d"
+  },
+  "survey.qmd": {
+    "survey.html": "0956574b"
+  },
+  "regression.qmd": {
+    "regression.html": "f545ca1d"
+  }
+}
