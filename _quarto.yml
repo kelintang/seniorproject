@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "new_project"
+  title: "Kelin's Project"
   navbar:
     left:
       - href: index.qmd

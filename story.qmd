@@ -1,0 +1,10 @@
+---
+title: "Data storytelling"
+output: 
+  html_document: 
+    theme: cerulean
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+

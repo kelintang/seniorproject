@@ -1,14 +1,14 @@
----
-title: "Got to Know the Survey"
-output: 
-  html_document: 
-    theme: cerulean
-    code_folding: hide
-    toc: true
-    toc_float: true
----
-
-```{r, include=FALSE}
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 library(tidyverse)
 library(dplyr)
 library(pander)
@@ -22,13 +22,13 @@ library(DT)
 
 self <-  read_excel("../Datasets for Ben/Employer Completer Survey/self_Evaluation.xlsx")
 employer <- read_excel("../Datasets for Ben/Employer Completer Survey/Employer_Evaluation.xlsx")
-```
-
-## Intro
-
-Self data is the individual student survey. Student fill out the survey to score their performance. Employer data is the principal score of the student performance. There is 16 questions in the survey. Looking at these two differences, I found out the students tend to score themself lower. 
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
 #| echo: true
 #| code-fold: true
 #| #| code-summary: "expand for full code"
@@ -51,45 +51,37 @@ employer <- employer %>%
   mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Maintain Accurate Records`), na.rm = TRUE), 2)) 
 
 
-```
-
-## Dataset {.tabset}
-
-#### Self Data  
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
 #| echo: true
 #| code-fold: true
 #| #| code-summary: "expand for full code"
 
 
 datatable(self, options=list(lengthMenu = c(5,10,30)), extensions="Responsive")
-```
-
-#### Employer Data 
-
-```{r}
+#
+#
+#
+#
+#
 #| echo: true
 #| code-fold: true
 #| #| code-summary: "expand for full code"
 
 
 datatable(employer, options=list(lengthMenu = c(5,10,30)), extensions="Responsive")
-```
-
-
-#### Data Processing
-
-Each question scale level is 1 - 4. However, some of the questions have 5 as the score. I replaced those data points is 5 to na. `Avg Score` calculates the average of the sum of all questions.
-
-#### Plot
-
-
-Base on this plot we can see there is no correlation between the Individual and the Principal.
-
-
-
-```{r,warning= FALSE}
+#
+#
+#
+#
+#
+#
+#
 #| echo: true
 #| code-fold: true
 #| #| code-summary: "expand for full code"
@@ -116,4 +108,7 @@ ggplot(bothsur) +
   geom_point(aes(x = `Avg Score.x`, y = `Avg Score.y`), size = 3) +
   labs(title="Relation between Student and Employer Survey",x = "Average Score (Student)", y = "Average Score (Employer)")
 
-```
+#
+#
+#
+#
