@@ -9,6 +9,11 @@
 #
 #
 #
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
 library(tidyverse)
 library(dplyr)
 library(pander)
@@ -19,9 +24,12 @@ library(ggridges)
 library(tidyr)
 library(naniar) #replace to na
 library(DT)
+library(arrow)
 
-self <-  read_excel("../Datasets for Ben/Employer Completer Survey/self_Evaluation.xlsx")
-employer <- read_excel("../Datasets for Ben/Employer Completer Survey/Employer_Evaluation.xlsx")
+self <-  read_excel("/Users/tanglin/Library/CloudStorage/OneDrive-BYU-Idaho/kelinseniorproject/new_project/Self_Evaluation.xlsx")
+employer <- read_excel("/Users/tanglin/Library/CloudStorage/OneDrive-BYU-Idaho/kelinseniorproject/new_project/Employer_Evaluation.xlsx")
+dem <- read_parquet('/Users/tanglin/Library/CloudStorage/OneDrive-BYU-Idaho/kelinseniorproject/new_project/demographics.parquet') 
+#
 #
 #
 #
@@ -32,60 +40,12 @@ employer <- read_excel("../Datasets for Ben/Employer Completer Survey/Employer_E
 #| echo: true
 #| code-fold: true
 #| #| code-summary: "expand for full code"
-
-
+# 5 to. NA
 self <- self %>% 
   replace_with_na_all(condition = ~.x == 5)
 
 employer <- employer %>%
   replace_with_na_all(condition = ~.x == 5)
-  
-self <- self %>%
-  mutate(who = "Individual") %>%
-  mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Maintain Accurate Records`), na.rm = TRUE), 2))
-
-   
-employer <- employer %>% 
-  filter(`Enable Student to Learn` < 5) %>% 
-  mutate(who="Principal") %>% 
-  mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Maintain Accurate Records`), na.rm = TRUE), 2)) 
-
-
-#
-#
-#
-#
-#
-#
-#
-#| echo: true
-#| code-fold: true
-#| #| code-summary: "expand for full code"
-
-
-datatable(self, options=list(lengthMenu = c(5,10,30)), extensions="Responsive")
-#
-#
-#
-#
-#
-#| echo: true
-#| code-fold: true
-#| #| code-summary: "expand for full code"
-
-
-datatable(employer, options=list(lengthMenu = c(5,10,30)), extensions="Responsive")
-#
-#
-#
-#
-#
-#
-#
-#| echo: true
-#| code-fold: true
-#| #| code-summary: "expand for full code"
-
 
 self <- self %>%
   mutate(who = "Individual") %>%
@@ -96,18 +56,887 @@ employer <- employer %>%
   filter(`Enable Student to Learn` < 5) %>% 
   mutate(who="Principal") %>% 
   mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Maintain Accurate Records`), na.rm = TRUE), 2)) 
-
-
 
 ###Join data
-bothsur <- inner_join(self, employer, by = "StudentID")
+
+self_dem <- inner_join(self, dem, by = "StudentID") %>%
+  distinct(StudentID, .keep_all = TRUE)
+self_dem <-  self_dem[!is.na(self_dem$`Avg Score`), ]
+#self_dem$Gender <- as.factor(self_dem$Gender)
+
+employer_dem <- inner_join(employer, dem, by = "StudentID") %>% 
+  distinct(StudentID, .keep_all = TRUE)
+employer_dem <-  employer_dem[!is.na(employer_dem$`Avg Score`), ]
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+#self
+#CurrentCumGPA
+self.lm <- lm(`Avg Score` ~  CurrentCumGPA,
+              data = self_dem) 
+pander(summary(self.lm))
+
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem,pch=16,main="Average Student Survey Scores \nand College GPA",xlab = "College GPA", ylab="Average Survey Questions Scores")
+abline( self.lm , lwd = 2,col="red")
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+##gender
+#not significant linear 
+
+self.lm <- lm(`Avg Score` ~  CurrentCumGPA + #CurrentCumGPA p= 0.0265
+                as.factor(Gender)+
+                CurrentCumGPA: as.factor(Gender),
+              data = self_dem)
+summary(self.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and \nCurrent Cum GPA by Gender")
+abline(2.32606 ,  0.17704, lwd = 3,col=palette()[1])
+abline(2.32606+ 0.38469 ,0.17704-0.09668, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+### Multiple Linear Regression Model
+self.lm <- lm(`Avg Score` ~  CurrentCumGPA +
+                as.factor(Ethnicity),
+              data = self_dem)
+summary(self.lm)
+
+palette(c("skyblue4","firebrick","skyblue","sienna1","gray","sienna4","lightgreen"))
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem, pch=16, col =as.numeric(factor(Ethnicity)),main="Student Survey Average Scores and \nCurrent Cum GPA by Ethnicity")
+abline(self.lm$coef[1]               , self.lm$coef[2], col=palette()[1])
+abline(self.lm$coef[1]+self.lm$coef[3], self.lm$coef[2]+self.lm$coef[3], col=palette()[2])
+abline(self.lm$coef[1]+self.lm$coef[4], self.lm$coef[2]+self.lm$coef[4], col=palette()[3])
+abline(self.lm$coef[1]+self.lm$coef[5], self.lm$coef[2]+self.lm$coef[5], col=palette()[4])
+abline(self.lm$coef[1]+self.lm$coef[6], self.lm$coef[2]+self.lm$coef[6], col=palette()[5])
+abline(self.lm$coef[1]+self.lm$coef[7], self.lm$coef[2]+self.lm$coef[7], col=palette()[6])
+abline(self.lm$coef[1]+self.lm$coef[8], self.lm$coef[2]+self.lm$coef[8], col=palette()[7])
+legend("bottomleft", col=palette(), pch=21, legend=c("Asian","Black","Hawaiian, Pacific Island","Hispanic, Latino","Other","Unknown", "White"), bty="n", text.col = palette(),  cex = 0.5)
 
 
-# no correlation between the Individual and Principal
-ggplot(bothsur) +
-  geom_point(aes(x = `Avg Score.x`, y = `Avg Score.y`), size = 3) +
-  labs(title="Relation between Student and Employer Survey",x = "Average Score (Student)", y = "Average Score (Employer)")
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+self.lm <- lm(`Avg Score` ~  ACTComposite, #p=0.543  
+              data = self_dem)
+summary(self.lm)
 
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ ACTComposite, data=self_dem,pch=16,main="Average Student Survey Scores \nand ACT Composite")
+abline(self.lm, lwd = 2,col="red")
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+#gender
+emp.lm <- lm(`Avg Score` ~  ACTComposite + 
+                as.factor(Gender)+
+                ACTComposite:as.factor(Gender),
+              data = employer_dem )
+summary(emp.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ ACTComposite , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand ACT Composite by Gender")
+abline(  3.176932 , -0.003915 , lwd = 3,col=palette()[1])
+abline( 3.176932-0.209335 , -0.003915+0.017143  , lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+#HighSchoolGPA
+self.lm <- lm(`Avg Score` ~  HighSchoolGPA, #p=0.156 
+              data = self_dem)
+summary(self.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA, data=self_dem,pch=16,main="Average Student Survey Scores \nand HighSchool GPA")
+abline(self.lm, lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+self.lm <- lm(`Avg Score` ~  HighSchoolGPA+
+                as.factor(Gender)+
+                HighSchoolGPA:as.factor(Gender),
+              data = self_dem)
+summary(self.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA , data=self_dem, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and HighSchool GPA\nby Gender")
+abline(  2.80650 ,  0.04262, lwd = 3,col=palette()[1])
+abline(  2.80650-1.38675  , 0.04262+0.42763  , lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+#CurrentCumGPA
+emp.lm <- lm(`Avg Score` ~  CurrentCumGPA,
+              data = employer_dem )
+summary(emp.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem ,pch=16,main= "Average Employer Survey Scores \nand College GPA",xlab = "College GPA", ylab = "Average Survey Questions Scores")
+
+
+abline(  2.63882 , 0.13435 , lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+##gender
+#not significant linear 
+
+emp.lm <- lm(`Avg Score` ~  CurrentCumGPA +
+                as.factor(Gender)+
+                CurrentCumGPA: as.factor(Gender),
+              data = employer_dem )
+summary(emp.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nCurrent Cum GPA by Gender")
+abline(2.67608 ,  0.11978, lwd = 3,col=palette()[1])
+abline(2.67608-0.45129 ,0.11978+0.16188, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+#ACTComposite
+#not significant linear 
+emp.lm <- lm(`Avg Score` ~   ACTComposite,
+             data = employer_dem )
+summary(emp.lm)
+
+plot(`Avg Score` ~ ACTComposite , data=employer_dem ,pch=16,main="Employer Survey Average Scores \nand ACT Composite")
+abline(  3.188623 , -0.003268 , lwd = 2,col="red")
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+emp.lm <- lm(`Avg Score` ~  ACTComposite + 
+                as.factor(Gender)+
+                ACTComposite:as.factor(Gender),
+              data = employer_dem )
+summary(emp.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ ACTComposite , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand ACT Composite by Gender")
+abline(  3.176932 , -0.003915 , lwd = 3,col=palette()[1])
+abline( 3.176932-0.209335 , -0.003915+0.017143  , lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+#HighSchoolGPA
+emp.lm <- lm(`Avg Score` ~  HighSchoolGPA+
+                as.factor(Gender)+
+                HighSchoolGPA:as.factor(Gender),
+              data = employer_dem )
+summary(emp.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nby Gender")
+abline(  2.98260  ,  0.03281 , lwd = 3,col=palette()[1])
+abline(   2.98260-0.86284 , 0.03281+ 0.29697  , lwd = 3, col=palette()[2])
+legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+### Multiple Linear Regression Model
+
+emp.lm <- lm(`Avg Score` ~  HighSchoolGPA+
+                as.factor(Gender)+
+                HighSchoolGPA:as.factor(Gender),
+              data = employer_dem )
+summary(emp.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand HighSchool GPA by Gender")
+abline(  2.98260  ,  0.03281 , lwd = 3,col=palette()[1])
+abline(   2.98260-0.86284 , 0.03281+ 0.29697  , lwd = 3, col=palette()[2])
+legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+
+self_dropq <- self %>%
+  mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Positive Effect on Student Achievement`), na.rm = TRUE), 2))
+
+
+employer_dropq <- employer %>% 
+  filter(`Enable Student to Learn` < 5) %>% 
+  mutate(`Avg Score` = round(rowMeans(select(., `Enable Student to Learn`: `Positive Effect on Student Achievement`), na.rm = TRUE), 2)) 
+
+
+drop_self <- self %>% 
+  select(StudentID:`Positive Effect on Student Achievement`, `Avg Score`) %>%
+  pivot_longer(`Enable Student to Learn`:`Positive Effect on Student Achievement`) %>%
+  mutate(weights = case_when(
+    name == "Enable Student to Learn" ~ 5,
+    name == "Promote Active Student Learning" ~ 5,
+    name == "Plan Instruction" ~ 5,
+    name == "Determine Student Strengths" ~ 10,
+    name == "Meet Student Needs" ~ 5,
+    name == "Evaluate and Modify Teaching Plan" ~ 5,
+    name == "Encourage Diverse Perspectives" ~ 5,
+    name == "Support New English Learners" ~ 5,
+    name == "Help Student Assess Learning" ~ 5,
+    name == "Teach Students with Exceptional Needs" ~ 5,
+    name == "Honor Diverse Cultures" ~ 5,
+    name == "Positive Effect on Student Achievement" ~ 10)) 
+
+drop_employer <- employer %>% 
+  select(StudentID:`Positive Effect on Student Achievement`, `Avg Score`) %>%
+  pivot_longer(`Enable Student to Learn`:`Positive Effect on Student Achievement`) %>%
+  mutate(weights = case_when(
+    name == "Enable Student to Learn" ~ 5,
+    name == "Promote Active Student Learning" ~ 5,
+    name == "Plan Instruction" ~ 5,
+    name == "Determine Student Strengths" ~ 10,
+    name == "Meet Student Needs" ~ 5,
+    name == "Evaluate and Modify Teaching Plan" ~ 5,
+    name == "Encourage Diverse Perspectives" ~ 5,
+    name == "Support New English Learners" ~ 5,
+    name == "Help Student Assess Learning" ~ 5,
+    name == "Teach Students with Exceptional Needs" ~ 5,
+    name == "Honor Diverse Cultures" ~ 5,
+    name == "Positive Effect on Student Achievement" ~ 10)) 
+
+
+self_dem_drop <- inner_join(self_dropq, dem, by = "StudentID") %>%
+  distinct(StudentID, .keep_all = TRUE)
+self_dem_drop <-  self_dem_drop[!is.na(self_dem_drop$`Avg Score`), ]
+#self_dem$Gender <- as.factor(self_dem$Gender)
+
+employer_dem_drop <- inner_join(employer_dropq, dem, by = "StudentID") %>% 
+  distinct(StudentID, .keep_all = TRUE)
+employer_dem_drop <-  employer_dem_drop[!is.na(employer_dem_drop$`Avg Score`), ]
+
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+#CurrentCumGPA
+self0.lm <- lm(`Avg Score` ~  CurrentCumGPA,
+              data = self_dem_drop )
+pander(summary(self0.lm))
+
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem_drop ,pch=16,main="Average Student Survey Socres \nand Current Cum GPA")
+abline( self0.lm , lwd = 2,col="red")
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+#not significant linear 
+self0.lm <- lm(`Avg Score` ~  CurrentCumGPA + #CurrentCumGPA p= 0.0265
+                as.factor(Gender)+
+                CurrentCumGPA: as.factor(Gender),
+              data = self_dem_drop)
+summary(self0.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Average Socres and \nCurrent Cum GPA by Gender")
+abline(2.3404, 0.1571, lwd = 3,col=palette()[1])
+abline(2.3404+0.4062,0.1571-0.1042, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+#ACTComposite
+#not significant linear
+self0.lm <- lm(`Avg Score` ~  ACTComposite, #p=0.543  
+              data = self_dem_drop)
+summary(self0.lm)
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+plot(`Avg Score` ~ ACTComposite, data=self_dem_drop,pch=16,main="Average Student Survey Socres \nand ACT Composite")
+abline(self_dem_drop, lwd = 2,col="red")
+
+
+#not significant linear 
+#gender
+self0.lm <- lm(`Avg Score` ~  ACTComposite + 
+                as.factor(Gender)+
+                ACTComposite:as.factor(Gender),
+              data = self_dem_drop)
+summary(self0.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ ACTComposite , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Average Socres and \nACT Composite by Gender")
+abline( 2.800517 , 0.004994, lwd = 3,col=palette()[1])
+abline( 2.800517+0.038578,0.004994-0.003115, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+#HighSchoolGPA
+self0.lm <- lm(`Avg Score` ~  HighSchoolGPA, #p=0.156 
+              data = self_dem_drop)
+summary(self0.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA, data=self_dem_drop,pch=16,main="Average Student Survey Socres \nand HighSchool GPA")
+abline(self0.lm, lwd = 2,col="red")
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+self0.lm <- lm(`Avg Score` ~  HighSchoolGPA+
+                as.factor(Gender)+
+                HighSchoolGPA:as.factor(Gender),
+              data = self_dem_drop)
+summary(self0.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Average Socres and \nHighSchool GPA by Gender")
+abline( 2.85551, 0.01378, lwd = 3,col=palette()[1])
+abline(2.85551-1.26325,0.01378+0.38877 , lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+emp0.lm <- lm(`Avg Score` ~  CurrentCumGPA,
+             data = employer_dem_drop )
+summary(emp0.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem_drop ,pch=16,main="Employer Survey Average Socres \nand Current Cum GPA")
+abline(2.63305, 0.12738, lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+emp0.lm <- lm(`Avg Score` ~  CurrentCumGPA +
+               as.factor(Gender)+
+               CurrentCumGPA: as.factor(Gender),
+             data = employer_dem_drop )
+summary(emp0.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nCurrent Cum GPA by Gender")
+abline(2.64946,0.11863, lwd = 3,col=palette()[1])
+abline(2.64946-0.36809,0.11863+0.13733, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+emp0.lm <- lm(`Avg Score` ~   ACTComposite,
+             data = employer_dem_drop)
+summary(emp0.lm)
+
+plot(`Avg Score` ~ ACTComposite , data=employer_dem_drop,pch=16,main="Employer Survey Average Socres \nand ACT Composite")
+abline(3.173841,-0.004074, lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+emp0.lm <- lm(`Avg Score` ~  ACTComposite + 
+               as.factor(Gender)+
+               ACTComposite:as.factor(Gender),
+             data = employer_dem_drop)
+summary(emp0.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ ACTComposite , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nand ACT Composite by Gender")
+abline(  3.156878, -0.004526, lwd = 3,col=palette()[1])
+abline(3.156878-0.179428, -0.004526+0.016019, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+emp0.lm <- lm(`Avg Score` ~   HighSchoolGPA,
+             data = employer_dem_drop)
+summary(emp0.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem_drop,pch=16,main="Employer Survey Average Socres \nand HighSchool GPA ")
+abline(2.85850, 0.06439, lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+emp0.lm <- lm(`Avg Score` ~  HighSchoolGPA+
+               as.factor(Gender)+
+               HighSchoolGPA:as.factor(Gender),
+             data = employer_dem_drop)
+summary(emp0.lm)
+
+palette(c("lightblue","orange"))
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nand HighSchool GPA by Gender")
+abline(2.98943,0.02214 , lwd = 3,col=palette()[1])
+abline(2.98943-0.87330,0.02214+0.30051, lwd = 3, col=palette()[2])
+legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+## weight avg 
+
+
+### Multiple Linear Regression Model
+self_dem <- inner_join(self, dem, by = "StudentID") %>%
+  distinct(StudentID, .keep_all = TRUE)
+self_dem <-  self_dem[!is.na(self_dem$`Avg Score`), ]
+#self_dem$Gender <- as.factor(self_dem$Gender)
+
+employer_dem <- inner_join(employer, dem, by = "StudentID") %>% 
+  distinct(StudentID, .keep_all = TRUE)
+employer_dem <-  employer_dem[!is.na(employer_dem$`Avg Score`), ]
+
+
+weight_self <- self_dem%>%
+  mutate(
+    `Enable Student to Learn Weight`  = `Enable Student to Learn` * 5,
+    `Promote Active Student Learning Weight` = `Promote Active Student Learning` * 5,
+    `Plan Instruction Weight` = `Plan Instruction`* 5,
+    `Determine Student Strengths Weight` = `Determine Student Strengths`* 10,
+    `Meet Student Needs Weight` = `Meet Student Needs`* 5,
+    `Evaluate and Modify Teaching Plan Weight` = `Evaluate and Modify Teaching Plan`* 5,
+    `Encourage Diverse Perspectives Weight` = `Encourage Diverse Perspectives`* 5,
+    `Support New English Learners Weight` = `Support New English Learners`* 5,
+    `Help Student Assess Learning Weight` = `Help Student Assess Learning`* 5,
+    `Teach Students with Exceptional Needs Weight` = `Teach Students with Exceptional Needs`* 5,
+    `Honor Diverse Cultures Weight` = `Honor Diverse Cultures`* 5,
+    `Positive Effect on Student Achievement Weight` = `Positive Effect on Student Achievement`* 10,
+    `Use Technology Weight` = `Use Technology`* 0,
+    `Teamwork Weight` = `Teamwork`* 0,
+    `Self-reflection Weight` = `Self-reflection`* 0,
+    `Maintain Accurate Records Weight` = `Maintain Accurate Records`* 0) %>% 
+  mutate(`Weight Avg Score` = round(rowMeans(select(., `Enable Student to Learn Weight`: `Maintain Accurate Records Weight`), na.rm = TRUE), 2))
+
+
+
+weight_emp <- employer_dem%>%
+  mutate(
+    `Enable Student to Learn Weight`  = `Enable Student to Learn` * 5,
+    `Promote Active Student Learning Weight` = `Promote Active Student Learning` * 5,
+    `Plan Instruction Weight` = `Plan Instruction`* 5,
+    `Determine Student Strengths Weight` = `Determine Student Strengths`* 10,
+    `Meet Student Needs Weight` = `Meet Student Needs`* 5,
+    `Evaluate and Modify Teaching Plan Weight` = `Evaluate and Modify Teaching Plan`* 5,
+    `Encourage Diverse Perspectives Weight` = `Encourage Diverse Perspectives`* 5,
+    `Support New English Learners Weight` = `Support New English Learners`* 5,
+    `Help Student Assess Learning Weight` = `Help Student Assess Learning`* 5,
+    `Teach Students with Exceptional Needs Weight` = `Teach Students with Exceptional Needs`* 5,
+    `Honor Diverse Cultures Weight` = `Honor Diverse Cultures`* 5,
+    `Positive Effect on Student Achievement Weight` = `Positive Effect on Student Achievement`* 10,
+    `Use Technology Weight` = `Use Technology`* 0,
+    `Teamwork Weight` = `Teamwork`* 0,
+    `Self-reflection Weight` = `Self-reflection`* 0,
+    `Maintain Accurate Records Weight` = `Maintain Accurate Records`* 0) %>% 
+  mutate(`Weight Avg Score` = round(rowMeans(select(., `Enable Student to Learn Weight`: `Maintain Accurate Records Weight`), na.rm = TRUE), 2))
+
+#
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+selfw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA,
+              data = weight_self)
+summary(selfw.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_self,pch=16,main="Average Student Survey Socres \nand Current Cum GPA")
+abline( selfw.lm , lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+selfw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA + #CurrentCumGPA p= 0.0265
+                as.factor(Gender)+
+                CurrentCumGPA: as.factor(Gender),
+              data = weight_self)
+summary(selfw.lm)
+
+palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Average Socres and \nCurrent Cum GPA by Gender")
+abline(10.0432 ,  0.7421, lwd = 3,col=palette()[1])
+abline(10.0432+1.8896,0.7421-0.4911, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+#ACTComposite
+#not significant linear
+selfw.lm <- lm(`Weight Avg Score` ~  ACTComposite, #p=0.543  
+              data = weight_self)
+summary(selfw.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ ACTComposite, data=weight_self,pch=16,main="Average Student Survey Socres \nand ACT Composite")
+abline(selfw.lm, lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+#not significant linear 
+#gender
+selfw.lm <- lm(`Weight Avg Score` ~  ACTComposite + 
+                as.factor(Gender)+
+                ACTComposite:as.factor(Gender),
+              data = weight_self)
+summary(selfw.lm)
+
+palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ ACTComposite , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Average Socres and CACT Composite\nby Gender")
+abline( 12.46303,0.01335, lwd = 3,col=palette()[1])
+abline(12.46303-0.47871,0.01335+0.01392, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+#HighSchoolGPA
+selfw.lm <- lm(`Weight Avg Score` ~  HighSchoolGPA, #p=0.156 
+              data = weight_self)
+summary(selfw.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ HighSchoolGPA, data=weight_self ,pch=16,main="Average Student Survey Socres \nand HighSchool GPA")
+abline(selfw.lm, lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+selfw.lm <- lm(`Weight Avg Score` ~  HighSchoolGPA+
+                as.factor(Gender)+
+                HighSchoolGPA:as.factor(Gender),
+              data = weight_self)
+summary(selfw.lm)
+
+palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Average Socres and HighSchool GPA\nby Gender")
+abline(12.49820,0.05896, lwd = 3,col=palette()[1])
+abline(12.49820-5.63024,0.05896+1.71930, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+
+#
+#
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+empw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA,
+             data = weight_emp)
+summary(empw.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_emp,pch=16,main="Employer Survey Average Socres \nand Current Cum GPA")
+abline(11.4750, 0.5330, lwd = 2,col="red")
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+##gender
+#not significant linear 
+
+empw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA +
+               as.factor(Gender)+
+               CurrentCumGPA: as.factor(Gender),
+             data = weight_emp )
+summary(empw.lm)
+
+palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_emp, col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nCurrent Cum GPA\nby Gender")
+abline(11.6810  ,0.4586, lwd = 3,col=palette()[1])
+abline(11.6810-2.0519 ,0.4586+0.7222, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+
+#
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+empw.lm <- lm(`Weight Avg Score` ~   ACTComposite,
+             data = weight_emp )
+summary(empw.lm)
+
+plot(`Weight Avg Score` ~ ACTComposite , data=weight_emp ,pch=16,main="Employer Survey Average Socres \nand ACT Composite")
+abline(13.530010, -0.008085, lwd = 2,col="red")
+
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+empw.lm <- lm(`Weight Avg Score` ~  ACTComposite + 
+               as.factor(Gender)+
+               ACTComposite:as.factor(Gender),
+             data = weight_emp )
+summary(empw.lm)
+
+palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ ACTComposite , data=weight_emp , col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nand ACT Composite by Gender")
+abline(13.46356, -0.01005, lwd = 3,col=palette()[1])
+abline( 13.46356-0.75443, -0.01005+0.06642, lwd = 3, col=palette()[2])
+legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+empw.lm <- lm(`Weight Avg Score` ~   HighSchoolGPA,
+             data = weight_emp)
+summary(empw.lm)
+
+#palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_emp ,pch=16,main="Employer Survey Average Socres \nand HighSchool GPA ")
+abline( 12.2714,0.3105  , lwd = 2,col="red")
+
+#
+#
+#
+#
+#
+#| echo: true
+#| code-fold: true
+#| #| code-summary: "expand for full code"
+
+empw.lm <- lm(`Weight Avg Score` ~  HighSchoolGPA+
+               as.factor(Gender)+
+               HighSchoolGPA:as.factor(Gender),
+             data = weight_emp)
+summary(empw.lm)
+
+palette(c("lightblue","orange"))
+plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_emp, col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nand HighSchool GPA by Gender")
+abline(13.11740,0.05199, lwd = 3,col=palette()[1])
+abline(13.11740-4.63278,0.05199+1.53586, lwd = 3, col=palette()[2])
+legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
+#
 #
 #
 #

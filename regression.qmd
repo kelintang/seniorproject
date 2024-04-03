@@ -79,11 +79,11 @@ employer_dem <-  employer_dem[!is.na(employer_dem$`Avg Score`), ]
 #self
 #CurrentCumGPA
 self.lm <- lm(`Avg Score` ~  CurrentCumGPA,
-              data = self_dem)
-summary(self.lm)
+              data = self_dem) 
+pander(summary(self.lm))
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=self_dem,pch=16,main="Aveage Student Survey Socres \nand Current Cum GPA")
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem,pch=16,main="Average Student Survey Scores \nand College GPA",xlab = "College GPA", ylab="Average Survey Questions Scores")
 abline( self.lm , lwd = 2,col="red")
 ```
 
@@ -104,7 +104,7 @@ self.lm <- lm(`Avg Score` ~  CurrentCumGPA + #CurrentCumGPA p= 0.0265
 summary(self.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=self_dem, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and \nCurrent Cum GPA by Gender")
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and \nCurrent Cum GPA by Gender")
 abline(2.32606 ,  0.17704, lwd = 3,col=palette()[1])
 abline(2.32606+ 0.38469 ,0.17704-0.09668, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -125,7 +125,7 @@ self.lm <- lm(`Avg Score` ~  CurrentCumGPA +
 summary(self.lm)
 
 palette(c("skyblue4","firebrick","skyblue","sienna1","gray","sienna4","lightgreen"))
-plot(`Avg Score` ~ CurrentCumGPA , data=self_dem, pch=16, col =as.numeric(factor(Ethnicity)),main="Student Survey Aveage Socres and \nCurrent Cum GPA by Ethnicity")
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem, pch=16, col =as.numeric(factor(Ethnicity)),main="Student Survey Average Scores and \nCurrent Cum GPA by Ethnicity")
 abline(self.lm$coef[1]               , self.lm$coef[2], col=palette()[1])
 abline(self.lm$coef[1]+self.lm$coef[3], self.lm$coef[2]+self.lm$coef[3], col=palette()[2])
 abline(self.lm$coef[1]+self.lm$coef[4], self.lm$coef[2]+self.lm$coef[4], col=palette()[3])
@@ -150,7 +150,7 @@ self.lm <- lm(`Avg Score` ~  ACTComposite, #p=0.543
 summary(self.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ ACTComposite, data=self_dem,pch=16,main="Aveage Student Survey Socres \nand ACT Composite")
+plot(`Avg Score` ~ ACTComposite, data=self_dem,pch=16,main="Average Student Survey Scores \nand ACT Composite")
 abline(self.lm, lwd = 2,col="red")
 ```
 
@@ -168,7 +168,7 @@ emp.lm <- lm(`Avg Score` ~  ACTComposite +
 summary(emp.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ ACTComposite , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nand ACT Composite by Gender")
+plot(`Avg Score` ~ ACTComposite , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand ACT Composite by Gender")
 abline(  3.176932 , -0.003915 , lwd = 3,col=palette()[1])
 abline( 3.176932-0.209335 , -0.003915+0.017143  , lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -188,7 +188,7 @@ self.lm <- lm(`Avg Score` ~  HighSchoolGPA, #p=0.156
 summary(self.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA, data=self_dem,pch=16,main="Aveage Student Survey Socres \nand HighSchool GPA")
+plot(`Avg Score` ~ HighSchoolGPA, data=self_dem,pch=16,main="Average Student Survey Scores \nand HighSchool GPA")
 abline(self.lm, lwd = 2,col="red")
 
 ```
@@ -207,7 +207,7 @@ self.lm <- lm(`Avg Score` ~  HighSchoolGPA+
 summary(self.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA , data=self_dem, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and HighSchool GPA\nby Gender")
+plot(`Avg Score` ~ HighSchoolGPA , data=self_dem, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and HighSchool GPA\nby Gender")
 abline(  2.80650 ,  0.04262, lwd = 3,col=palette()[1])
 abline(  2.80650-1.38675  , 0.04262+0.42763  , lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -228,7 +228,9 @@ emp.lm <- lm(`Avg Score` ~  CurrentCumGPA,
 summary(emp.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem ,pch=16,main="Employer Survey Aveage Socres \nand Current Cum GPA")
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem ,pch=16,main= "Average Employer Survey Scores \nand College GPA",xlab = "College GPA", ylab = "Average Survey Questions Scores")
+
+
 abline(  2.63882 , 0.13435 , lwd = 2,col="red")
 
 ```
@@ -250,7 +252,7 @@ emp.lm <- lm(`Avg Score` ~  CurrentCumGPA +
 summary(emp.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nCurrent Cum GPA by Gender")
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nCurrent Cum GPA by Gender")
 abline(2.67608 ,  0.11978, lwd = 3,col=palette()[1])
 abline(2.67608-0.45129 ,0.11978+0.16188, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -271,7 +273,7 @@ emp.lm <- lm(`Avg Score` ~   ACTComposite,
              data = employer_dem )
 summary(emp.lm)
 
-plot(`Avg Score` ~ ACTComposite , data=employer_dem ,pch=16,main="Employer Survey Aveage Socres \nand ACT Composite")
+plot(`Avg Score` ~ ACTComposite , data=employer_dem ,pch=16,main="Employer Survey Average Scores \nand ACT Composite")
 abline(  3.188623 , -0.003268 , lwd = 2,col="red")
 ```
 
@@ -289,7 +291,7 @@ emp.lm <- lm(`Avg Score` ~  ACTComposite +
 summary(emp.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ ACTComposite , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nand ACT Composite by Gender")
+plot(`Avg Score` ~ ACTComposite , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand ACT Composite by Gender")
 abline(  3.176932 , -0.003915 , lwd = 3,col=palette()[1])
 abline( 3.176932-0.209335 , -0.003915+0.017143  , lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -310,7 +312,7 @@ emp.lm <- lm(`Avg Score` ~  HighSchoolGPA+
 summary(emp.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nby Gender")
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Socres \nby Gender")
 abline(  2.98260  ,  0.03281 , lwd = 3,col=palette()[1])
 abline(   2.98260-0.86284 , 0.03281+ 0.29697  , lwd = 3, col=palette()[2])
 legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -331,7 +333,7 @@ emp.lm <- lm(`Avg Score` ~  HighSchoolGPA+
 summary(emp.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nand HighSchool GPA by Gender")
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand HighSchool GPA by Gender")
 abline(  2.98260  ,  0.03281 , lwd = 3,col=palette()[1])
 abline(   2.98260-0.86284 , 0.03281+ 0.29697  , lwd = 3, col=palette()[2])
 legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -411,10 +413,10 @@ employer_dem_drop <-  employer_dem_drop[!is.na(employer_dem_drop$`Avg Score`), ]
 #CurrentCumGPA
 self0.lm <- lm(`Avg Score` ~  CurrentCumGPA,
               data = self_dem_drop )
-summary(self0.lm)
+pander(summary(self0.lm))
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=self_dem_drop ,pch=16,main="Aveage Student Survey Socres \nand Current Cum GPA")
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem_drop ,pch=16,main="Average Student Survey Scores \nand Current Cum GPA")
 abline( self0.lm , lwd = 2,col="red")
 ```
 
@@ -433,7 +435,7 @@ self0.lm <- lm(`Avg Score` ~  CurrentCumGPA + #CurrentCumGPA p= 0.0265
 summary(self0.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and \nCurrent Cum GPA by Gender")
+plot(`Avg Score` ~ CurrentCumGPA , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and \nCurrent Cum GPA by Gender")
 abline(2.3404, 0.1571, lwd = 3,col=palette()[1])
 abline(2.3404+0.4062,0.1571-0.1042, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -459,7 +461,7 @@ summary(self0.lm)
 #| code-fold: true
 #| #| code-summary: "expand for full code"
 
-plot(`Avg Score` ~ ACTComposite, data=self_dem_drop,pch=16,main="Aveage Student Survey Socres \nand ACT Composite")
+plot(`Avg Score` ~ ACTComposite, data=self_dem_drop,pch=16,main="Average Student Survey Scores \nand ACT Composite")
 abline(self_dem_drop, lwd = 2,col="red")
 
 
@@ -472,7 +474,7 @@ self0.lm <- lm(`Avg Score` ~  ACTComposite +
 summary(self0.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ ACTComposite , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and \nACT Composite by Gender")
+plot(`Avg Score` ~ ACTComposite , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and \nACT Composite by Gender")
 abline( 2.800517 , 0.004994, lwd = 3,col=palette()[1])
 abline( 2.800517+0.038578,0.004994-0.003115, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -491,7 +493,7 @@ self0.lm <- lm(`Avg Score` ~  HighSchoolGPA, #p=0.156
 summary(self0.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA, data=self_dem_drop,pch=16,main="Aveage Student Survey Socres \nand HighSchool GPA")
+plot(`Avg Score` ~ HighSchoolGPA, data=self_dem_drop,pch=16,main="Average Student Survey Scores \nand HighSchool GPA")
 abline(self0.lm, lwd = 2,col="red")
 ```
 
@@ -509,7 +511,7 @@ self0.lm <- lm(`Avg Score` ~  HighSchoolGPA+
 summary(self0.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and \nHighSchool GPA by Gender")
+plot(`Avg Score` ~ HighSchoolGPA , data=self_dem_drop, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and \nHighSchool GPA by Gender")
 abline( 2.85551, 0.01378, lwd = 3,col=palette()[1])
 abline(2.85551-1.26325,0.01378+0.38877 , lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -532,7 +534,7 @@ emp0.lm <- lm(`Avg Score` ~  CurrentCumGPA,
 summary(emp0.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem_drop ,pch=16,main="Employer Survey Aveage Socres \nand Current Cum GPA")
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem_drop ,pch=16,main="Employer Survey Average Scores \nand Current Cum GPA")
 abline(2.63305, 0.12738, lwd = 2,col="red")
 
 ```
@@ -551,7 +553,7 @@ emp0.lm <- lm(`Avg Score` ~  CurrentCumGPA +
 summary(emp0.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nCurrent Cum GPA by Gender")
+plot(`Avg Score` ~ CurrentCumGPA , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nCurrent Cum GPA by Gender")
 abline(2.64946,0.11863, lwd = 3,col=palette()[1])
 abline(2.64946-0.36809,0.11863+0.13733, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -567,7 +569,7 @@ emp0.lm <- lm(`Avg Score` ~   ACTComposite,
              data = employer_dem_drop)
 summary(emp0.lm)
 
-plot(`Avg Score` ~ ACTComposite , data=employer_dem_drop,pch=16,main="Employer Survey Aveage Socres \nand ACT Composite")
+plot(`Avg Score` ~ ACTComposite , data=employer_dem_drop,pch=16,main="Employer Survey Average Scores \nand ACT Composite")
 abline(3.173841,-0.004074, lwd = 2,col="red")
 
 ```
@@ -586,7 +588,7 @@ emp0.lm <- lm(`Avg Score` ~  ACTComposite +
 summary(emp0.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ ACTComposite , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nand ACT Composite by Gender")
+plot(`Avg Score` ~ ACTComposite , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand ACT Composite by Gender")
 abline(  3.156878, -0.004526, lwd = 3,col=palette()[1])
 abline(3.156878-0.179428, -0.004526+0.016019, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -604,7 +606,7 @@ emp0.lm <- lm(`Avg Score` ~   HighSchoolGPA,
 summary(emp0.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem_drop,pch=16,main="Employer Survey Aveage Socres \nand HighSchool GPA ")
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem_drop,pch=16,main="Employer Survey Average Scores \nand HighSchool GPA ")
 abline(2.85850, 0.06439, lwd = 2,col="red")
 
 ```
@@ -623,7 +625,7 @@ emp0.lm <- lm(`Avg Score` ~  HighSchoolGPA+
 summary(emp0.lm)
 
 palette(c("lightblue","orange"))
-plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nand HighSchool GPA by Gender")
+plot(`Avg Score` ~ HighSchoolGPA , data=employer_dem_drop, col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand HighSchool GPA by Gender")
 abline(2.98943,0.02214 , lwd = 3,col=palette()[1])
 abline(2.98943-0.87330,0.02214+0.30051, lwd = 3, col=palette()[2])
 legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -710,7 +712,7 @@ selfw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA,
 summary(selfw.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_self,pch=16,main="Aveage Student Survey Socres \nand Current Cum GPA")
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_self,pch=16,main="Average Student Survey Scores \nand Current Cum GPA")
 abline( selfw.lm , lwd = 2,col="red")
 
 ```
@@ -729,7 +731,7 @@ selfw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA + #CurrentCumGPA p= 0.0265
 summary(selfw.lm)
 
 palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and \nCurrent Cum GPA by Gender")
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and \nCurrent Cum GPA by Gender")
 abline(10.0432 ,  0.7421, lwd = 3,col=palette()[1])
 abline(10.0432+1.8896,0.7421-0.4911, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -749,7 +751,7 @@ selfw.lm <- lm(`Weight Avg Score` ~  ACTComposite, #p=0.543
 summary(selfw.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ ACTComposite, data=weight_self,pch=16,main="Aveage Student Survey Socres \nand ACT Composite")
+plot(`Weight Avg Score` ~ ACTComposite, data=weight_self,pch=16,main="Average Student Survey Scores \nand ACT Composite")
 abline(selfw.lm, lwd = 2,col="red")
 
 ```
@@ -770,7 +772,7 @@ selfw.lm <- lm(`Weight Avg Score` ~  ACTComposite +
 summary(selfw.lm)
 
 palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ ACTComposite , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and CACT Composite\nby Gender")
+plot(`Weight Avg Score` ~ ACTComposite , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and CACT Composite\nby Gender")
 abline( 12.46303,0.01335, lwd = 3,col=palette()[1])
 abline(12.46303-0.47871,0.01335+0.01392, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -789,7 +791,7 @@ selfw.lm <- lm(`Weight Avg Score` ~  HighSchoolGPA, #p=0.156
 summary(selfw.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ HighSchoolGPA, data=weight_self ,pch=16,main="Aveage Student Survey Socres \nand HighSchool GPA")
+plot(`Weight Avg Score` ~ HighSchoolGPA, data=weight_self ,pch=16,main="Average Student Survey Scores \nand HighSchool GPA")
 abline(selfw.lm, lwd = 2,col="red")
 
 ```
@@ -808,7 +810,7 @@ selfw.lm <- lm(`Weight Avg Score` ~  HighSchoolGPA+
 summary(selfw.lm)
 
 palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Aveage Socres and HighSchool GPA\nby Gender")
+plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_self, col=as.factor(Gender),pch=16,main="Student Survey Average Scores and HighSchool GPA\nby Gender")
 abline(12.49820,0.05896, lwd = 3,col=palette()[1])
 abline(12.49820-5.63024,0.05896+1.71930, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -831,7 +833,7 @@ empw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA,
 summary(empw.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_emp,pch=16,main="Employer Survey Aveage Socres \nand Current Cum GPA")
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_emp,pch=16,main="Employer Survey Average Scores \nand Current Cum GPA")
 abline(11.4750, 0.5330, lwd = 2,col="red")
 ```
 
@@ -852,7 +854,7 @@ empw.lm <- lm(`Weight Avg Score` ~  CurrentCumGPA +
 summary(empw.lm)
 
 palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_emp, col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nCurrent Cum GPA\nby Gender")
+plot(`Weight Avg Score` ~ CurrentCumGPA , data=weight_emp, col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nCurrent Cum GPA\nby Gender")
 abline(11.6810  ,0.4586, lwd = 3,col=palette()[1])
 abline(11.6810-2.0519 ,0.4586+0.7222, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -872,7 +874,7 @@ empw.lm <- lm(`Weight Avg Score` ~   ACTComposite,
              data = weight_emp )
 summary(empw.lm)
 
-plot(`Weight Avg Score` ~ ACTComposite , data=weight_emp ,pch=16,main="Employer Survey Aveage Socres \nand ACT Composite")
+plot(`Weight Avg Score` ~ ACTComposite , data=weight_emp ,pch=16,main="Employer Survey Average Scores \nand ACT Composite")
 abline(13.530010, -0.008085, lwd = 2,col="red")
 
 
@@ -892,7 +894,7 @@ empw.lm <- lm(`Weight Avg Score` ~  ACTComposite +
 summary(empw.lm)
 
 palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ ACTComposite , data=weight_emp , col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nand ACT Composite by Gender")
+plot(`Weight Avg Score` ~ ACTComposite , data=weight_emp , col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand ACT Composite by Gender")
 abline(13.46356, -0.01005, lwd = 3,col=palette()[1])
 abline( 13.46356-0.75443, -0.01005+0.06642, lwd = 3, col=palette()[2])
 legend("bottomright", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
@@ -911,7 +913,7 @@ empw.lm <- lm(`Weight Avg Score` ~   HighSchoolGPA,
 summary(empw.lm)
 
 #palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_emp ,pch=16,main="Employer Survey Aveage Socres \nand HighSchool GPA ")
+plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_emp ,pch=16,main="Employer Survey Average Scores \nand HighSchool GPA ")
 abline( 12.2714,0.3105  , lwd = 2,col="red")
 
 ```
@@ -930,7 +932,7 @@ empw.lm <- lm(`Weight Avg Score` ~  HighSchoolGPA+
 summary(empw.lm)
 
 palette(c("lightblue","orange"))
-plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_emp, col=as.factor(Gender),pch=16,main="Employer Survey Aveage Socres \nand HighSchool GPA by Gender")
+plot(`Weight Avg Score` ~ HighSchoolGPA , data=weight_emp, col=as.factor(Gender),pch=16,main="Employer Survey Average Scores \nand HighSchool GPA by Gender")
 abline(13.11740,0.05199, lwd = 3,col=palette()[1])
 abline(13.11740-4.63278,0.05199+1.53586, lwd = 3, col=palette()[2])
 legend("bottomleft", col=palette(), pch=21, legend=c("F", "M"), bty="n", text.col = palette())
