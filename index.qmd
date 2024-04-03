@@ -1,7 +1,5 @@
 ---
-title: "new_project"
+title: "Kelin Tang's Data Science Portfolio"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+- [My regression post](regression.html)
