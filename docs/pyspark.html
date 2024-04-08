@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Kelin’s Project - Kelin Tang’s Data Science Portfolio</title>
+<title>Kelin’s Project - What’s PySpark?</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page">
+    <a class="nav-link" href="./index.html">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -98,14 +98,30 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#whats-apache-spark" id="toc-whats-apache-spark" class="nav-link" data-scroll-target="#whats-apache-spark">What’s Apache Spark</a></li>
+  <li><a href="#differences-between-pyspark-and-pandas" id="toc-differences-between-pyspark-and-pandas" class="nav-link" data-scroll-target="#differences-between-pyspark-and-pandas">Differences between PySpark and Pandas</a>
+  <ul class="collapse">
+  <li><a href="#scale-and-performance" id="toc-scale-and-performance" class="nav-link" data-scroll-target="#scale-and-performance">Scale and Performance</a></li>
+  <li><a href="#distributed-computing" id="toc-distributed-computing" class="nav-link" data-scroll-target="#distributed-computing">Distributed Computing</a></li>
+  <li><a href="#api-and-syntax" id="toc-api-and-syntax" class="nav-link" data-scroll-target="#api-and-syntax">API and Syntax</a></li>
+  <li><a href="#dependencies" id="toc-dependencies" class="nav-link" data-scroll-target="#dependencies">Dependencies</a></li>
+  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use Cases</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Kelin Tang’s Data Science Portfolio</h1>
+<h1 class="title">What’s PySpark?</h1>
 </div>
 
 
@@ -120,14 +136,68 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<ul>
-<li><p><a href="regression.html">My regression post</a></p></li>
-<li><p><a href="survey.html">Talk about survey</a></p></li>
-<li><p><a href="./docker.html">What’s Docker?</a></p></li>
-<li><p><a href="./pyspark.html">What’s PySpark?</a></p></li>
-</ul>
+<section id="intro" class="level2">
+<h2 class="anchored" data-anchor-id="intro">Intro</h2>
+<p>PySpark is a Spark Library for Python. It mainly uses Python syntax combined with the Spark framework. It is also one of the most mainstream frameworks for processing large amounts of data.</p>
+</section>
+<section id="whats-apache-spark" class="level2">
+<h2 class="anchored" data-anchor-id="whats-apache-spark">What’s Apache Spark</h2>
+<p><img src="pyspark.jpeg" class="img-fluid"></p>
+<p>Apache Spark is an open-source unified analytics engine designed for large-scale data processing. It provides a versatile platform for executing various tasks, including data engineering, data science, and machine learning. Let’s explore its key features:</p>
+<section id="batch-and-streaming-data-processing" class="level4">
+<h4 class="anchored" data-anchor-id="batch-and-streaming-data-processing">Batch and Streaming Data Processing</h4>
+<p>PySpark allows you to process data in both batches and real-time streaming. You can use your preferred language: Python, SQL, Scala, Java, or R.</p>
+</section>
+<section id="sql-analytics" class="level4">
+<h4 class="anchored" data-anchor-id="sql-analytics">SQL Analytics</h4>
+<p>Execute fast, distributed ANSI SQL queries for dashboarding and ad-hoc reporting. Spark’s performance often surpasses that of traditional data warehouses.</p>
+</section>
+<section id="data-science-at-scale" class="level4">
+<h4 class="anchored" data-anchor-id="data-science-at-scale">Data Science at Scale</h4>
+<p>Perform Exploratory Data Analysis (EDA) on petabyte-scale data without downsampling. Train machine learning algorithms on a laptop and scale them to fault-tolerant clusters.</p>
+</section>
+<section id="interoperability" class="level4">
+<h4 class="anchored" data-anchor-id="interoperability">Interoperability</h4>
+<p>Transition seamlessly between Spark and other tools. Use the same code for machine learning across thousands of machines.</p>
+</section>
+<section id="community-and-ecosystem" class="level4">
+<h4 class="anchored" data-anchor-id="community-and-ecosystem">Community and Ecosystem</h4>
+<p>Thousands of companies, including 80% of the Fortune 500, rely on Apache Spark. The open-source community contributes to its growth and development.</p>
+</section>
+</section>
+<section id="differences-between-pyspark-and-pandas" class="level2">
+<h2 class="anchored" data-anchor-id="differences-between-pyspark-and-pandas">Differences between PySpark and Pandas</h2>
+<section id="scale-and-performance" class="level3">
+<h3 class="anchored" data-anchor-id="scale-and-performance">Scale and Performance</h3>
+<p>PySpark is designed to handle big data processing, leveraging the distributed computing power of Apache Spark. It can efficiently handle large datasets that don’t fit into memory, making it suitable for processing terabytes of data. Pandas, on the other hand, is more suitable for small to medium-sized datasets that can fit into memory on a single machine.</p>
+</section>
+<section id="distributed-computing" class="level3">
+<h3 class="anchored" data-anchor-id="distributed-computing">Distributed Computing</h3>
+<p>PySpark distributes data across a cluster of machines, allowing for parallel processing. This makes PySpark much faster for large-scale data processing compared to Pandas, which processes data on a single machine.</p>
+</section>
+<section id="api-and-syntax" class="level3">
+<h3 class="anchored" data-anchor-id="api-and-syntax">API and Syntax</h3>
+<p>PySpark’s API is similar to Pandas, but there are differences in syntax and functionality. PySpark’s DataFrame API is inspired by Pandas, but it may not have all the same functions and methods. Additionally, PySpark uses lazy evaluation, which means that transformations on data are not executed until an action is performed, unlike Pandas, which eagerly evaluates operations.</p>
+</section>
+<section id="dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="dependencies">Dependencies</h3>
+<p>PySpark has dependencies on Spark and its components, which need to be installed and configured. Pandas, on the other hand, has fewer dependencies and is easier to set up for basic data analysis tasks.</p>
+</section>
+<section id="use-cases" class="level3">
+<h3 class="anchored" data-anchor-id="use-cases">Use Cases</h3>
+<p>PySpark is well-suited for processing large-scale datasets, especially in distributed environments such as clusters or cloud services. It is commonly used for data preprocessing, ETL (Extract, Transform, Load) tasks, and big data analytics. Pandas, on the other hand, is more suitable for exploratory data analysis, data cleaning, and manipulation of smaller datasets.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>PySpark is ideal for big data processing and analysis, offering scalability and performance benefits, while Pandas is more suitable for smaller datasets and quick data analysis tasks on a single machine.</p>
+<section id="reference" class="level6">
+<h6 class="anchored" data-anchor-id="reference">Reference</h6>
+<p><a href="https://medium.com/geekculture/pandas-vs-pyspark-fe110c266e5c#:~:text=PySpark%20allows%20for%20parallel%20processing,data%20from%20local%20file%20systems.">Pandas vs PySpark..!</a></p>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

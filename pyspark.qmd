@@ -1,0 +1,73 @@
+---
+title: "What's PySpark?"
+output: 
+  html_document: 
+    theme: cerulean
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+## Intro
+
+PySpark is a Spark Library for Python. It mainly uses Python syntax combined with the Spark framework. It is also one of the most mainstream frameworks for processing large amounts of data.
+
+## What's Apache Spark
+
+![](pyspark.jpeg)
+
+Apache Spark is an open-source unified analytics engine designed for large-scale data processing. It provides a versatile platform for executing various tasks, including data engineering, data science, and machine learning. Let’s explore its key features:
+
+#### Batch and Streaming Data Processing
+
+PySpark allows you to process data in both batches and real-time streaming.
+You can use your preferred language: Python, SQL, Scala, Java, or R.
+
+#### SQL Analytics
+
+Execute fast, distributed ANSI SQL queries for dashboarding and ad-hoc reporting.
+Spark’s performance often surpasses that of traditional data warehouses.
+
+#### Data Science at Scale
+
+Perform Exploratory Data Analysis (EDA) on petabyte-scale data without downsampling.
+Train machine learning algorithms on a laptop and scale them to fault-tolerant clusters.
+
+#### Interoperability
+
+Transition seamlessly between Spark and other tools.
+Use the same code for machine learning across thousands of machines.
+
+#### Community and Ecosystem
+
+Thousands of companies, including 80% of the Fortune 500, rely on Apache Spark.
+The open-source community contributes to its growth and development.
+
+## Differences between PySpark and Pandas
+
+### Scale and Performance
+
+PySpark is designed to handle big data processing, leveraging the distributed computing power of Apache Spark. It can efficiently handle large datasets that don't fit into memory, making it suitable for processing terabytes of data. Pandas, on the other hand, is more suitable for small to medium-sized datasets that can fit into memory on a single machine.
+
+### Distributed Computing
+
+PySpark distributes data across a cluster of machines, allowing for parallel processing. This makes PySpark much faster for large-scale data processing compared to Pandas, which processes data on a single machine.
+
+### API and Syntax
+
+PySpark's API is similar to Pandas, but there are differences in syntax and functionality. PySpark's DataFrame API is inspired by Pandas, but it may not have all the same functions and methods. Additionally, PySpark uses lazy evaluation, which means that transformations on data are not executed until an action is performed, unlike Pandas, which eagerly evaluates operations.
+
+### Dependencies
+
+PySpark has dependencies on Spark and its components, which need to be installed and configured. Pandas, on the other hand, has fewer dependencies and is easier to set up for basic data analysis tasks.
+
+### Use Cases
+
+PySpark is well-suited for processing large-scale datasets, especially in distributed environments such as clusters or cloud services. It is commonly used for data preprocessing, ETL (Extract, Transform, Load) tasks, and big data analytics. Pandas, on the other hand, is more suitable for exploratory data analysis, data cleaning, and manipulation of smaller datasets.
+
+### Conclusion
+PySpark is ideal for big data processing and analysis, offering scalability and performance benefits, while Pandas is more suitable for smaller datasets and quick data analysis tasks on a single machine.
+
+###### Reference
+
+[Pandas vs PySpark..!](https://medium.com/geekculture/pandas-vs-pyspark-fe110c266e5c#:~:text=PySpark%20allows%20for%20parallel%20processing,data%20from%20local%20file%20systems.)

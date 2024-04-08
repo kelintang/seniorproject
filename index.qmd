@@ -3,3 +3,9 @@ title: "Kelin Tang's Data Science Portfolio"
 ---
 
 - [My regression post](regression.html)
+
+- [Talk about survey](survey.html)
+
+- [What's Docker?](docker.qmd)
+
+- [What's PySpark?](pyspark.qmd)

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Kelin’s Project - Kelin Tang’s Data Science Portfolio</title>
+<title>Kelin’s Project - What’s Docker?</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page">
+    <a class="nav-link" href="./index.html">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -98,14 +98,35 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#why-use-docker" id="toc-why-use-docker" class="nav-link" data-scroll-target="#why-use-docker">Why use Docker?</a>
+  <ul class="collapse">
+  <li><a href="#isolation-and-consistency" id="toc-isolation-and-consistency" class="nav-link" data-scroll-target="#isolation-and-consistency">1. Isolation and Consistency</a></li>
+  <li><a href="#portability" id="toc-portability" class="nav-link" data-scroll-target="#portability">2. Portability</a></li>
+  <li><a href="#efficiency" id="toc-efficiency" class="nav-link" data-scroll-target="#efficiency">3. Efficiency</a></li>
+  <li><a href="#scalability" id="toc-scalability" class="nav-link" data-scroll-target="#scalability">4. Scalability</a></li>
+  <li><a href="#version-control" id="toc-version-control" class="nav-link" data-scroll-target="#version-control">5. Version Control</a></li>
+  </ul></li>
+  <li><a href="#key-elements-that-constitute-docker" id="toc-key-elements-that-constitute-docker" class="nav-link" data-scroll-target="#key-elements-that-constitute-docker">Key elements that constitute Docker</a>
+  <ul class="collapse">
+  <li><a href="#dockerfile" id="toc-dockerfile" class="nav-link" data-scroll-target="#dockerfile">Dockerfile</a></li>
+  <li><a href="#images" id="toc-images" class="nav-link" data-scroll-target="#images">Images</a></li>
+  <li><a href="#containers" id="toc-containers" class="nav-link" data-scroll-target="#containers">Containers</a></li>
+  <li><a href="#repository" id="toc-repository" class="nav-link" data-scroll-target="#repository">Repository</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Kelin Tang’s Data Science Portfolio</h1>
+<h1 class="title">What’s Docker?</h1>
 </div>
 
 
@@ -120,14 +141,59 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<ul>
-<li><p><a href="regression.html">My regression post</a></p></li>
-<li><p><a href="survey.html">Talk about survey</a></p></li>
-<li><p><a href="./docker.html">What’s Docker?</a></p></li>
-<li><p><a href="./pyspark.html">What’s PySpark?</a></p></li>
-</ul>
+<section id="intro" class="level2">
+<h2 class="anchored" data-anchor-id="intro">Intro</h2>
+<p>Docker is a container engine, which uses Linux Kernel features to create containers on top of the operating system. Its core idea is encapsulated in the phrase “Build and Ship any Application Anywhere.” With Docker, developers can work within a virtual environment to create, deploy, and manage applications. The lightweight nature of Docker provides an isolated testing environment for applications, allowing users to focus on development without spending excessive time and effort on environment setup.</p>
+</section>
+<section id="why-use-docker" class="level2">
+<h2 class="anchored" data-anchor-id="why-use-docker">Why use Docker?</h2>
+<section id="isolation-and-consistency" class="level3">
+<h3 class="anchored" data-anchor-id="isolation-and-consistency">1. Isolation and Consistency</h3>
+<p>Docker allows you to encapsulate an application and its dependencies into a container. These containers are isolated from the host system and other containers, ensuring consistent behavior across different environments. This consistency simplifies deployment and reduces the dreaded “it works on my machine” problem.</p>
+</section>
+<section id="portability" class="level3">
+<h3 class="anchored" data-anchor-id="portability">2. Portability</h3>
+<p>With Docker, you can package your application, libraries, and configuration files into a single container image. This image can be easily moved between different environments (development, testing, production) without worrying about compatibility issues. It’s like shipping your application in a standardized box.</p>
+</section>
+<section id="efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="efficiency">3. Efficiency</h3>
+<p>Docker containers share the host OS kernel, which makes them lightweight compared to traditional virtual machines. You can run multiple containers on the same machine without significant overhead. This efficiency is especially beneficial for cloud-based deployments.</p>
+</section>
+<section id="scalability" class="level3">
+<h3 class="anchored" data-anchor-id="scalability">4. Scalability</h3>
+<p>Docker simplifies scaling your application. You can quickly spin up additional containers to handle increased load. Whether you’re running a single container or orchestrating a complex microservices architecture, Docker’s scalability features are invaluable.</p>
+</section>
+<section id="version-control" class="level3">
+<h3 class="anchored" data-anchor-id="version-control">5. Version Control</h3>
+<p>Docker images are versioned, allowing you to track changes over time. You can roll back to previous versions or update to newer ones seamlessly. This version control extends to both your application code and its dependencies. DevOps and Continuous Integration: Docker integrates well with DevOps practices. You can automate the entire software development lifecycle, from building and testing to deployment. Continuous integration pipelines often use Docker to ensure consistent builds across different stages.</p>
+</section>
+</section>
+<section id="key-elements-that-constitute-docker" class="level2">
+<h2 class="anchored" data-anchor-id="key-elements-that-constitute-docker">Key elements that constitute Docker</h2>
+<p><img src="docker.png" class="img-fluid"></p>
+<section id="dockerfile" class="level3">
+<h3 class="anchored" data-anchor-id="dockerfile">Dockerfile</h3>
+<p>A Dockerfile is a text file that contains instructions for building a Docker image. It specifies the base image, adds files, sets environment variables, and defines other configuration details. By creating a Dockerfile, you automate the process of creating consistent images.</p>
+</section>
+<section id="images" class="level3">
+<h3 class="anchored" data-anchor-id="images">Images</h3>
+<p>Docker images serve as read-only templates for creating containers. An image defines the application, libraries, and configuration files. You can think of it as a snapshot of a container at a specific point in time. Images are shareable, versioned, and can be pulled from registries like Docker Hub.</p>
+</section>
+<section id="containers" class="level3">
+<h3 class="anchored" data-anchor-id="containers">Containers</h3>
+<p>These are the fundamental building blocks of Docker. Containers encapsulate an application along with its dependencies, providing isolation from the host system and other containers. They ensure consistent behavior across different environments. Think of containers as lightweight, portable units that package everything needed to run your application.</p>
+</section>
+<section id="repository" class="level3">
+<h3 class="anchored" data-anchor-id="repository">Repository</h3>
+<p>A repository is a centralized location for storing and sharing Docker images. The most well-known registry is Docker Hub, where you can find a vast collection of public images. You can also set up private registries within your organization to manage custom images.</p>
+<section id="reference" class="level6">
+<h6 class="anchored" data-anchor-id="reference">Reference</h6>
+<p><a href="https://medium.com/swlh/understand-dockerfile-dd11746ed183https://medium.com/javarevisited/how-docker-works-internally-magic-behind-containerization-65ea5aa0a4ff">How Docker works internally? Magic Behind Containerization</a></p>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

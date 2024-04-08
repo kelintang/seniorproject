@@ -1,0 +1,59 @@
+---
+title: "What's Docker?"
+output: 
+  html_document: 
+    theme: cerulean
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+## Intro
+
+Docker is a container engine, which uses Linux Kernel features to create containers on top of the operating system. Its core idea is encapsulated in the phrase “Build and Ship any Application Anywhere.” With Docker, developers can work within a virtual environment to create, deploy, and manage applications. The lightweight nature of Docker provides an isolated testing environment for applications, allowing users to focus on development without spending excessive time and effort on environment setup.
+
+## Why use Docker?
+
+### 1. Isolation and Consistency
+
+Docker allows you to encapsulate an application and its dependencies into a container. These containers are isolated from the host system and other containers, ensuring consistent behavior across different environments. This consistency simplifies deployment and reduces the dreaded “it works on my machine” problem.
+
+### 2. Portability
+
+With Docker, you can package your application, libraries, and configuration files into a single container image. This image can be easily moved between different environments (development, testing, production) without worrying about compatibility issues. It’s like shipping your application in a standardized box.
+
+### 3. Efficiency
+
+Docker containers share the host OS kernel, which makes them lightweight compared to traditional virtual machines. You can run multiple containers on the same machine without significant overhead. This efficiency is especially beneficial for cloud-based deployments.
+
+### 4. Scalability
+
+Docker simplifies scaling your application. You can quickly spin up additional containers to handle increased load. Whether you’re running a single container or orchestrating a complex microservices architecture, Docker’s scalability features are invaluable.
+
+### 5. Version Control
+
+Docker images are versioned, allowing you to track changes over time. You can roll back to previous versions or update to newer ones seamlessly. This version control extends to both your application code and its dependencies. DevOps and Continuous Integration: Docker integrates well with DevOps practices. You can automate the entire software development lifecycle, from building and testing to deployment. Continuous integration pipelines often use Docker to ensure consistent builds across different stages.
+
+## Key elements that constitute Docker
+
+![](docker.png)
+
+### Dockerfile
+
+A Dockerfile is a text file that contains instructions for building a Docker image. It specifies the base image, adds files, sets environment variables, and defines other configuration details. By creating a Dockerfile, you automate the process of creating consistent images.
+
+### Images
+
+Docker images serve as read-only templates for creating containers. An image defines the application, libraries, and configuration files. You can think of it as a snapshot of a container at a specific point in time. Images are shareable, versioned, and can be pulled from registries like Docker Hub. 
+
+### Containers
+
+These are the fundamental building blocks of Docker. Containers encapsulate an application along with its dependencies, providing isolation from the host system and other containers. They ensure consistent behavior across different environments. Think of containers as lightweight, portable units that package everything needed to run your application.
+
+### Repository
+
+A repository is a centralized location for storing and sharing Docker images. The most well-known registry is Docker Hub, where you can find a vast collection of public images. You can also set up private registries within your organization to manage custom images.
+
+
+###### Reference
+[How Docker works internally? Magic Behind Containerization](https://medium.com/swlh/understand-dockerfile-dd11746ed183https://medium.com/javarevisited/how-docker-works-internally-magic-behind-containerization-65ea5aa0a4ff)

@@ -13,5 +13,11 @@
   },
   "story.qmd": {
     "story.html": "fa989cf2"
+  },
+  "docker.qmd": {
+    "docker.html": "9a23ca0b"
+  },
+  "pyspark.qmd": {
+    "pyspark.html": "a8c406a0"
   }
 }
